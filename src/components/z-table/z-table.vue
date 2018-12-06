@@ -1,7 +1,7 @@
 <template>
   <div class="z-table">
     <div class="funcs">
-      <el-button v-for="item in funcs" :key="item" @click="func(item)">{{item}}</el-button>
+      <el-button v-for="item in funcs" :key="item" @click="func(item)" :type="item === '删除' ? 'danger': 'default'">{{item}}</el-button>
     </div>
     <el-table ref="multipleTable" :data="tableData" tooltip-effect="dark" style="width: 100%" @selection-change="handleSelectionChange" border>
       <el-table-column type="selection" width="55">
@@ -18,9 +18,9 @@
         <el-table-column v-if="column.mul" v-for="subColumn in column.subColumns" :label="subColumn.label" :key="subColumn.value" :width="subColumn.width" show-overflow-tooltip>
           <template slot-scope="scope">
             <div v-html="subColumn.formatter(scope.row)" v-if="subColumn.formatter"></div>
-          <div v-else>
-            {{scope.row[subColumn.value]}}
-          </div>
+            <div v-else>
+              {{scope.row[subColumn.value]}}
+            </div>
           </template>
         </el-table-column>
       </el-table-column>
@@ -70,8 +70,17 @@ export default {
     },
     // 向父组件触发功能函数
     func(opera) {
-      if (opera === "新增" || opera === '删除') {
+      if (opera === "新增") {
         // 新增不需要检测是否选中一项
+        this.$emit("func", { opera, row: this.multipleSelection });
+      } else if (opera === "删除") {
+        if (!this.multipleSelection) {
+          this.$message({
+            message: "请至少选择一项进行操作",
+            type: "warning"
+          });
+          return;
+        }
         this.$emit("func", { opera, row: this.multipleSelection });
       } else {
         // 非新增需要检测是否选中一项
