@@ -7,7 +7,7 @@
       <el-header>
         <Top class="top" />
       </el-header>
-      <el-main>
+      <el-main :style="`background: ${style.main.backgroundColor}`">
         <Main class="main" />
       </el-main>
     </el-container>

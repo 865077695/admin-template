@@ -2,27 +2,25 @@ import { getNav } from '../api'
 const auth = {
     state: {
         menus: [],
-        funcs: false,   // 是否登录
+        funcs: [],   // 是否登录
     },
     mutations: {
-        setMenu(state, menuList){
+        setMenus(state, menuList){
             state.menus = menuList;
-        }
+        },
+        // 切换router时设置funcs
+        // setFuncs(state, menuList){
+            // state.funcs = 
+        // }
     },
     actions: {
-        // getNavList({ commit, state }) {
-        // state.navLoading = true
-        // getNav().then(res => {
-        //     state.navLoading = false
-        //     commit('setTopNav', res.menuList)
-        //     commit('setLeftNav');
-        // })
-        // }
         getNav({commit}){
+            // 加载left组件时ajax获取权限导航同时设置导航菜单并设置funcs
             getNav().then(res => {
                 console.log(res)
                 if(res.code === 0){
-                    commit('setMenu', res.menuList)
+                    commit('setMenus', res.menuList);
+                    // commit('setFuncs', res.menuList);
                 }
             })
         }

@@ -6,7 +6,7 @@
     <el-table ref="multipleTable" :data="tableData" tooltip-effect="dark" style="width: 100%" @selection-change="handleSelectionChange" border>
       <el-table-column type="selection" width="55">
       </el-table-column>
-      <el-table-column v-for="column in tableColumns" :key="column.label" :label="column.label" :width="column.width" show-overflow-tooltip>
+      <el-table-column v-for="column in tableColumns" :key="column.value" :label="column.label" :width="column.width" show-overflow-tooltip>
         <!-- 单行表头， 可接收html格式文本 -->
         <template slot-scope="scope" v-if="!column.mul">
           <div v-html="column.formatter(scope.row)" v-if="column.formatter"></div>
@@ -15,7 +15,7 @@
           </div>
         </template>
         <!-- 多行表头， 可接收html格式文本 -->
-        <el-table-column v-if="column.mul" v-for="subColumn in column.subColumns" :label="subColumn.label" :key="subColumn.label" :width="subColumn.width" show-overflow-tooltip>
+        <el-table-column v-if="column.mul" v-for="subColumn in column.subColumns" :label="subColumn.label" :key="subColumn.value" :width="subColumn.width" show-overflow-tooltip>
           <template slot-scope="scope">
             <div v-html="subColumn.formatter(scope.row)" v-if="subColumn.formatter"></div>
           <div v-else>
@@ -70,9 +70,9 @@ export default {
     },
     // 向父组件触发功能函数
     func(opera) {
-      if (opera === "新增") {
+      if (opera === "新增" || opera === '删除') {
         // 新增不需要检测是否选中一项
-        this.$emit("func", { opera });
+        this.$emit("func", { opera, row: this.multipleSelection });
       } else {
         // 非新增需要检测是否选中一项
         if (

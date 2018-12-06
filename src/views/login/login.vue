@@ -64,7 +64,7 @@ export default {
               localStorage.setItem("token", res.datas.token);
               localStorage.setItem("username", this.loginForm.username);
               localStorage.setItem("userId", res.datas.userId);
-              this.$router.push({ path: "/main" });
+              this.$router.push({ path: "/content" });
             } else {
               this.$message({
                 message: res.msg,
