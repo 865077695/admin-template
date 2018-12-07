@@ -1,12 +1,12 @@
 <template>
-  <div class="role top-border">
+  <div class="role box">
     <!-- 搜索 -->
     <z-search :searchItems="searchItems" @search="search"></z-search>
     <!-- 功能+table -->
     <z-table :tableData="tableData" :tableColumns="tableColumns" :page="page" :funcs="funcs" @func="func" @handleCurrentChange="handleCurrentChange" v-loading="tableLoading"></z-table>
     <!-- 新增/编辑dialog -->
     <el-dialog :title="dialogTitle" :visible.sync="dialogVisible">
-      <el-form :model="dialogData" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+      <el-form :model="dialogData" ref="ruleForm" label-width="100px" class="demo-ruleForm" :disabled="dialogTitle === '详情'">
         <el-form-item label="角色名称：" prop="roleName">
           <el-input v-model="dialogData.roleName"></el-input>
         </el-form-item>
@@ -86,6 +86,9 @@ export default {
     },
     func({ opera, row }) {
       switch (opera) {
+        case "查看":
+          this.view(row);
+          break;
         case "修改":
           this.edit(row);
           break;
@@ -102,6 +105,17 @@ export default {
       this.dialogData = {};
       this.dialogVisible = true;
       this.getAllMenu();
+    },
+    view(row) {
+      this.dialogTitle = "详情";
+      this.dialogData = { ...row };
+      this.dialogVisible = true;
+      this.getAllMenu();
+      role({ roleId: row.roleId }).then(res => {
+        if (res.code === 0) {
+          this.dialogData = res.role;
+        }
+      });
     },
     edit(row) {
       this.dialogTitle = "编辑";
@@ -183,6 +197,8 @@ export default {
                 });
               }
             });
+          }else if(this.dialogTitle === '详情'){
+            this.dialogVisible = false;
           }
         } else {
           return false;

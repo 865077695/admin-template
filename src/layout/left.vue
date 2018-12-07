@@ -1,6 +1,6 @@
 <template>
   <div class="left" :style="`background: ${style.top.backgroundColor}`">
-    <div class="logo" :style="`height: ${style.left.height}`">
+    <div class="logo" :style="`height: ${style.top.height}`">
       <img :src="logo" height="50" alt="">
     </div>
     <el-menu :default-active="defaultActive" class="el-menu-vertical-demo" router :background-color="style.left.backgroundColor" :text-color="style.left.textColor" :active-text-color="style.left.activeTextColor">

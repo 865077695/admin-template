@@ -247,3 +247,17 @@ export const tableColumns = [
       { label: "硬件版本", value: "hardwareVersion" },
 ]
 
+
+
+export const formItems = [
+      {
+            label: '设备别名', value: 'deviceName', type: 'input', rules: [
+                  { required: true, message: '订单号不能为空', trigger: 'blur' }
+            ]
+      },
+      {
+            label: '商家', value: 'merchantName', type: 'input', rules: [
+                  { required: true, message: '订单号不能为空', trigger: 'blur' }
+            ]
+      }
+]

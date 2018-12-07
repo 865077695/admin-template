@@ -1,5 +1,5 @@
 <template>
-  <div class="account top-border">
+  <div class="box">
     <!-- 搜索 -->
     <el-form :inline="true" :model="searchData" class="demo-form-inline">
       <el-form-item label="账户名：">

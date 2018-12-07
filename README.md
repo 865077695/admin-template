@@ -7,7 +7,7 @@ npm install
 
 ### 启动
 ```
-npm run serve
+npm run serve（若有需要可在config.js内修改接口地址）
 ```
 
 ### 打包
