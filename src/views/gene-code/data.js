@@ -9,7 +9,7 @@ export const searchItems = [
 ]
 
 // 功能按钮
-export const funcs = ['生成代码'];
+export const funcs = ['生成JPA模板', '生成Mybatis模板'];
 
 // 表格项
 export const tableColumns = [

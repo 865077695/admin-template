@@ -1,36 +1,21 @@
 <template>
-    <div class="role box">
+    <div class="dept box">
         <!-- 搜索 -->
-        <z-search :searchItems="searchItems" @search="search"></z-search>
+        <!--<z-search :searchItems="searchItems" @search="search"></z-search>-->
         <!-- 功能+table -->
-        <z-table :tableData="tableData" :tableColumns="tableColumns" :page="page" :funcs="funcs" @func="func"
-                 @handleCurrentChange="handleCurrentChange" v-loading="tableLoading"></z-table>
+        <z-table :tableData="tableData" :tableColumns="tableColumns" :page="page" :funcs="funcs" @func="func" @handleCurrentChange="handleCurrentChange" v-loading="tableLoading"></z-table>
         <!-- 新增/编辑dialog -->
         <el-dialog :title="dialogTitle" :visible.sync="dialogVisible">
-            <el-form :model="dialogData" ref="ruleForm" label-width="100px" class="demo-ruleForm"
-                     :disabled="dialogTitle === '详情'">
-                <el-form-item label="角色名称：" prop="roleName">
-                    <el-input v-model="dialogData.roleName"></el-input>
+            <el-form :model="dialogData" ref="ruleForm" label-width="100px" class="demo-ruleForm" :disabled="dialogTitle === '详情'">
+                <el-form-item label="部门名称：" prop="name">
+                    <el-input v-model="dialogData.name"></el-input>
                 </el-form-item>
-                <el-form-item label="所属部门：" prop="deptId">
-                        <p style="width: 200px;height: 30px;line-height: 30px;border: 1px solid #eee;background: #eee;cursor: pointer;" @click="deptVisible = true">{{dialogData.deptName}}</p>
+                <el-form-item label="上级部门：" prop="parentId">
+                        <p style="width: 200px;height: 30px;line-height: 30px;border: 1px solid #eee;background: #eee;cursor: pointer;" @click="deptVisible = true">{{dialogData.parentName}}</p>
                 </el-form-item>
-                <el-form-item label="功能权限：" prop="menuIdList">
-                    <el-tree v-loading="treeLoading" :data="allMenu" :default-checked-keys="dialogData.menuIdList || []"
-                             show-checkbox node-key="menuId" default-expand-all :props="defaultProps" check-strictly
-                             ref="roleTree">
-                    </el-tree>
+                <el-form-item label="排序号：" prop="orderNum">
+                    <el-input-number v-model="dialogData.orderNum" controls-position="right"  :min="0"></el-input-number>
                 </el-form-item>
-                <el-form-item label="数据权限：" prop="deptIdList">
-                    <el-tree v-loading="treeLoading" :data="allDept" :default-checked-keys="dialogData.deptIdList || []"
-                             show-checkbox node-key="deptId" default-expand-all :props="defaultProps" check-strictly
-                             ref="deptTree">
-                    </el-tree>
-                </el-form-item>
-                <el-form-item label="备注：" prop="remark">
-                    <el-input type="textarea" v-model="dialogData.remark"></el-input>
-                </el-form-item>
-
             </el-form>
             <el-dialog title="选择部门" :visible.sync="deptVisible" z-index="600">
                 <el-tree
@@ -54,11 +39,9 @@
 
 <script>
     import ZTable from "@/components/z-table/z-table";
-    import ZSearch from "@/components/z-search/z-search";
-    import {tableColumns, searchItems} from "./data";
-    import {roleList, role, addRole, editRole, delRole, getAllMenu, getAllDept} from "./api";
+    import { tableColumns, searchItems } from "./data";
+    import { deptList, dept, addDept, editDept, delDept,deptSelect } from "./api";
     import * as util from "@/common/js/util";
-
     export default {
         data() {
             return {
@@ -72,16 +55,14 @@
                 tableColumns,
                 searchItems,
                 tableLoading: false,
-                dialogFormVisible: false,
-                deptVisible: false,
                 searchForm: {},
                 dialogTitle: "新增",
                 dialogVisible: false,
+                deptVisible: false,
                 labelWidth: "100px",
                 dialogData: {
                     schemalist: []
                 },
-                allMenu: [],
                 allDept: [],
                 treeLoading: false,
                 defaultProps: {
@@ -97,31 +78,11 @@
         methods: {
             getList() {
                 this.tableLoading = true;
-                const params = {limit: 10, page: this.page.currentPage, ...this.searchForm};
-                roleList(params).then(res => {
+                const params = { page: this.page.currentPage, ...this.searchForm };
+                deptList(params).then(res => {
                     this.tableLoading = false;
-                    this.tableData = res.page.list;
-                    this.page.total = res.page.totalCount;
-                });
-            },
-            getAllMenu() {
-                this.treeLoading = true;
-                getAllMenu().then(res => {
-                    this.treeLoading = false;
-                    if (res.code == 0) {
-                        this.allMenu = util.formatterData(res.menulist, "menuId");
-                    }
-                });
-            },
-            getAllDept() {
-                this.treeLoading = true;
-                getAllDept().then(res => {
-                    this.treeLoading = false;
-                    if (res.code == 0) {
-                        console.log(res)
-                        this.allDept = util.formatterData(res.deptlist, "deptId");
-                        console.log(this.allDept)
-                    }
+                    this.tableData = res.deptlist;
+                    // this.page.total = res.page.totalCount;
                 });
             },
             search(searchForm) {
@@ -129,7 +90,7 @@
                 this.searchForm = searchForm;
                 this.getList();
             },
-            func({opera, row}) {
+            func({ opera, row }) {
                 switch (opera) {
                     case "查看":
                         this.view(row);
@@ -149,30 +110,34 @@
                 this.dialogTitle = "新增";
                 this.dialogData = {};
                 this.dialogVisible = true;
-                this.getAllMenu();
-                this.getAllDept();
+                deptSelect().then(res => {
+                    if (res.code === 0) {
+                        this.allDept = util.formatterData(res.deptList, "deptId");
+                    }
+                });
             },
             view(row) {
                 this.dialogTitle = "详情";
-                // this.dialogData = {...row};
+                this.dialogData = { ...row };
                 this.dialogVisible = true;
-                this.getAllMenu();
-                this.getAllDept();
-                role({roleId: row.roleId}).then(res => {
+                dept({ deptId: row.deptId }).then(res => {
                     if (res.code === 0) {
-                        this.dialogData = res.role;
+                        this.dialogData = res.dept;
                     }
                 });
             },
             edit(row) {
                 this.dialogTitle = "编辑";
+                this.dialogData = { ...row };
                 this.dialogVisible = true;
-                this.getAllMenu();
-                this.getAllDept();
-                role({roleId: row.roleId}).then(res => {
+                dept({ deptId: row.deptId }).then(res => {
                     if (res.code === 0) {
-                        this.dialogData = res.role;
-                        this.dialogData.deptName = row.deptName;
+                        this.dialogData = res.dept;
+                    }
+                });
+                deptSelect().then(res => {
+                    if (res.code === 0) {
+                        this.allDept = util.formatterData(res.deptList, "deptId");
                     }
                 });
             },
@@ -183,7 +148,7 @@
                     type: "warning"
                 })
                     .then(() => {
-                        delRole([row[0].roleId]).then(res => {
+                        delDept([row[0].deptId]).then(res => {
                             this.$message({
                                 message: res.code === 0 ? "删除成功" : res.msg,
                                 type: res.code === 0 ? "success" : "error"
@@ -207,11 +172,11 @@
                     if (valid) {
                         this.btnLoading = true;
                         if (this.dialogTitle === "编辑") {
-                            editRole({
+                            console.log("324254");
+                            editDept({
                                 ...this.dialogData,
-                                menuIdList: this.$refs.roleTree.getCheckedKeys(),
-                                deptIdList: this.$refs.deptTree.getCheckedKeys()
                             }).then(res => {
+                                console.log("111111");
                                 this.btnLoading = false;
                                 if (res.code == 0) {
                                     this.$message({
@@ -228,10 +193,8 @@
                                 }
                             });
                         } else if (this.dialogTitle === "新增") {
-                            addRole({
+                            addDept({
                                 ...this.dialogData,
-                                menuIdList: this.$refs.roleTree.getCheckedKeys(),
-                                deptIdList: this.$refs.deptTree.getCheckedKeys()
                             }).then(res => {
                                 if (res.code == 0) {
                                     this.$message({
@@ -247,7 +210,7 @@
                                     });
                                 }
                             });
-                        } else if (this.dialogTitle === '详情') {
+                        }else if(this.dialogTitle === '详情'){
                             this.dialogVisible = false;
                         }
                     } else {
@@ -262,8 +225,8 @@
             },
             confirmDeptId() {
                 this.deptVisible = false;
-                this.dialogData.deptId = this.selectedDeptId;
-                this.dialogData.deptName = this.selectedDeptName;
+                this.dialogData.parentId = this.selectedDeptId;
+                this.dialogData.parentName = this.selectedDeptName;
             }
         },
         computed: {
@@ -271,7 +234,7 @@
                 return util.funcsParse(this.$route, this.$store.state.auth.menus);
             }
         },
-        components: {ZTable, ZSearch}
+        components: { ZTable}
     };
 </script>
 

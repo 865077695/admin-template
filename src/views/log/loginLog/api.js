@@ -1,8 +1,9 @@
 import ax from '@/request/ax'
+
 // 列表
 export function getList(data) {
     return ax({
-        url: `/devices`,
+        url: `/loginLogs`,
         method: 'post',
         data
     })
@@ -11,7 +12,7 @@ export function getList(data) {
 // 新增
 export function add(data) {
     return ax({
-        url: `/devices/`,
+        url: `/loginLogs/`,
         method: 'post',
         data
     })
@@ -20,7 +21,7 @@ export function add(data) {
 // 修改
 export function edit({ id, data }) {
     return ax({
-        url: `/devices/${id}`,
+        url: `/loginLogs/${id}`,
         method: 'put',
         data
     })
@@ -29,7 +30,7 @@ export function edit({ id, data }) {
 // 删除
 export function del({ id }) {
     return ax({
-        url: `/devices/${id}`,
+        url: `/loginLogs/${id}`,
         method: 'delete'
     })
 }
@@ -37,7 +38,7 @@ export function del({ id }) {
 // 详情
 export function getDetail({ id }) {
     return ax({
-        url: `/devices/${id}`,
+        url: `/loginLogs/${id}`,
         method: 'get'
     })
 }

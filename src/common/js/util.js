@@ -1,7 +1,12 @@
 export const formatterData = function (data, key = "deptId") {
+    let minNum = data.reduce((res, item) => {
+        return res > item.parentId ? item.parentId : res;
+    }, 100)
+    console.log('minNum', minNum);
     data.forEach(item => {
+
         let parentId = item.parentId;
-        if (parentId === 0) {
+        if (parentId === minNum) {
             //是根元素的hua ,不做任何操作
         } else {
             //如果item是子元素的话 ,把item扔到他的父亲的child数组中.
@@ -18,7 +23,7 @@ export const formatterData = function (data, key = "deptId") {
         }
     });
     //去除重复元素
-    data = data.filter(item => item.parentId === 0);
+    data = data.filter(item => item.parentId === minNum);
     return data;
 }
 

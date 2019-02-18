@@ -40,7 +40,9 @@ export default {
       return "";
     },
     menus() {
-      return this.$store.state.auth.menus;
+      console.log(this.$store.state.auth.menus);
+      const menus = [...this.$store.state.auth.menus];
+      return menus;
     }
   }
 };

@@ -1,20 +1,9 @@
 <template>
   <div class="box">
     <!-- 搜索 -->
-    <z-search
-      :searchItems="searchItems"
-      @search="search"
-    ></z-search>
+    <z-search :searchItems="searchItems" @search="search"></z-search>
     <!-- 功能+table -->
-    <z-table
-      :tableData="tableData"
-      :tableColumns="tableColumns"
-      :page="page"
-      :funcs="funcs"
-      @func="func"
-      @handleCurrentChange="handleCurrentChange"
-      v-loading="tableLoading"
-    ></z-table>
+    <z-table :tableData="tableData" :tableColumns="tableColumns" :page="page" :funcs="funcs" @func="func" @handleCurrentChange="handleCurrentChange" v-loading="tableLoading"></z-table>
 
   </div>
 </template>
@@ -68,20 +57,25 @@ export default {
         case "删除":
           this.del(row);
           break;
-        case "生成代码":
-          this.geneCode(row);
+        case "生成JPA模板":
+          this.geneCode(row, 0);
           break;
+        case "生成Mybatis模板":
+          this.geneCode(row, 1);
       }
     },
-    geneCode(row) {
-      geneCode({ tableName: row.table ,version:"1.5.9"}).then(res => {
-        if (res.data.ret === 0) {
-          this.$message({
-            message: "生成成功",
-            type: "success"
-          });
+    geneCode(row, model) {
+      console.log(model)
+      geneCode({ tableName: row.table, version: "1.5.9", model: model }).then(
+        res => {
+          if (res.data.ret === 0) {
+            this.$message({
+              message: "生成成功",
+              type: "success"
+            });
+          }
         }
-      });
+      );
     },
     edit(row) {
       console.log(row);

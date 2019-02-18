@@ -1,10 +1,11 @@
 import ax from '@/request/ax';
 
 // 获取所有角色
-export function roleList() {
+export function roleList(params) {
     return ax({
         url: `/sys/role/list`,
-        method: 'get'
+        method: 'get',
+        params
     })
 }
 
@@ -34,7 +35,7 @@ export function editRole(data) {
     })
 }
 
-// 修改角色
+// 删除角色
 export function delRole(data) {
     return ax({
         url: `/sys/role/delete`,
@@ -47,6 +48,13 @@ export function delRole(data) {
 export function getAllMenu() {
     return ax({
         url: `/sys/menu/list`,
+        method: 'get'
+    })
+}
+// 获取所有部门
+export function getAllDept() {
+    return ax({
+        url: `/sys/dept/list`,
         method: 'get'
     })
 }

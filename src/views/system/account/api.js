@@ -43,3 +43,10 @@ export function getUser({user_id}){
         method: 'get'
     })
 }
+// 获取所有部门
+export function getAllDept() {
+    return ax({
+        url: `/sys/dept/list`,
+        method: 'get'
+    })
+}

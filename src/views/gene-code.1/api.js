@@ -17,7 +17,14 @@ export function geneCode({ tableName, menuName, version, model }) {
         params: { tableName, menuName, version, model }
     })
 }
-
+// 生成代码
+export function geneMybatisCode(data) {
+    return ax({
+        url: `/autoCode/run`,
+        method: 'post',
+        data
+    })
+}
 // 新增
 export function add(data) {
     return ax({
@@ -51,10 +58,12 @@ export function getDetail({ id }) {
         method: 'get'
     })
 }
-// 导出
-export function _export({id}){
+
+// 获取表数据项
+export function getTableField(params) {
     return ax({
-        url: `/adv/export/${id}`,
-        method: 'get'
+        url: `/autoCode/columnNames`,
+        method: 'get',
+        params
     })
 }

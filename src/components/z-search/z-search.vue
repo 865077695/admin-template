@@ -3,6 +3,10 @@
     <el-form-item :label="item.label + '：'" v-for="item in searchItems" :key="item.value">
       <!-- 普通input框 -->
       <el-input v-model="searchForm[item.value]" :placeholder="item.placeholder" v-if="item.type==='input'"></el-input>
+      <!-- select框 -->
+      <el-select v-model="searchForm[item.value]" :placeholder="item.placeholder" v-if="item.type === 'select'">
+        <el-option v-for="option in item.options" :key="option.value" :label="option.label" :value="option.value"></el-option>
+      </el-select>
       <!-- datetimerange -->
       <el-date-picker v-model="searchForm[item.value]" type="datetimerange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" v-if="item.type==='datetimerange'" value-format="timestamp">
       </el-date-picker>
