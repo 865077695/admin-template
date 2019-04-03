@@ -1,8 +1,12 @@
-export const searchItems = [
+export const columns = [
+    {
+        text: "部门名称",
+        value: "name"
+    },
+    {
+        text: "上级部门",
+        value: "parentName"
+    }
 ]
 
-export const tableColumns = [
-    { label: '部门名称', value: 'name' },
-    { label: '上级部门', value: 'parentName' },
-    { label: '排序号', value: 'orderNum' },
-]
+export const func = ['add', 'edit', 'del']
